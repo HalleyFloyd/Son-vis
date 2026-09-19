@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Zombie Survival 2D</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -10,58 +10,86 @@
 
   <canvas id="gameCanvas"></canvas>
 
-  <div id="mobileControls">
-    <div id="joystickZone" class="touch-zone"></div>
+  <!-- Controles Táctiles para Móviles -->
+  <div id="mobileControls" class="mobile-ui">
+    <div id="joystickZone" class="touch-zone">
+      <div id="joystickBase" class="joystick-circle">
+        <div id="joystickStick" class="joystick-knob"></div>
+      </div>
+    </div>
+    <div id="aimZone" class="touch-zone">
+      <div id="aimBase" class="joystick-circle aim-circle">
+        <div id="aimStick" class="joystick-knob aim-knob"></div>
+      </div>
+    </div>
+    
+    <!-- Botones de Utilidad en Pantalla Móvil -->
+    <button id="mobilePauseBtn" class="mobile-hud-btn" onclick="togglePause()" aria-label="Pausa">⏸</button>
+    <button id="autoAimToggleBtn" class="mobile-hud-btn" onclick="toggleAutoAim()" aria-label="Auto-Apuntado">🎯 AUTO</button>
   </div>
 
+  <!-- Menú Principal -->
   <div id="mainMenu" class="screen">
     <h1>ZOMBIE SURVIVAL 2D</h1>
+    <p style="color: #aaa; margin-bottom: 20px; font-size: 0.95rem; text-align: center;">Sobrevive a las hordas, desbloquea aumentos y perfecciona tu build</p>
     <button class="btn" onclick="showScreen('heroMenu')">JUGAR</button>
     <button class="btn" onclick="showScreen('codexMenu')">CÓDICE DE AUMENTOS</button>
   </div>
 
+  <!-- Menú Selección de Héroe -->
   <div id="heroMenu" class="screen hidden">
     <h1>ELIGE TU PERSONAJE</h1>
     <div id="heroGrid" class="selection-grid"></div>
-    <div style="margin-top: 15px;">
+    <div class="menu-actions">
       <button class="btn" onclick="showScreen('weaponMenu')">CONTINUAR</button>
-      <button class="btn" style="background: #444;" onclick="showScreen('mainMenu')">VOLVER</button>
+      <button class="btn btn-secondary" onclick="showScreen('mainMenu')">VOLVER</button>
     </div>
   </div>
 
+  <!-- Menú Selección de Arma -->
   <div id="weaponMenu" class="screen hidden">
     <h1>ELIGE TU ARMA</h1>
     <div id="weaponGrid" class="selection-grid"></div>
-    <div style="margin-top: 15px;">
-      <button class="btn" onclick="startGame()">EMPEZAR</button>
-      <button class="btn" style="background: #444;" onclick="showScreen('heroMenu')">VOLVER</button>
+    <div class="menu-actions">
+      <button class="btn btn-primary" onclick="startGame()">EMPEZAR</button>
+      <button class="btn btn-secondary" onclick="showScreen('heroMenu')">VOLVER</button>
     </div>
   </div>
 
+  <!-- Códice de Aumentos -->
   <div id="codexMenu" class="screen hidden">
-    <h1>CÓDICE DE AUMENTOS (90 ÚNICOS)</h1>
+    <h1>CÓDICE DE AUMENTOS (90 ÚNICOS + 10 INFINITOS)</h1>
     <div id="codexList" class="codex-list"></div>
-    <button class="btn" style="margin-top: 15px;" onclick="showScreen('mainMenu')">VOLVER</button>
+    <div class="menu-actions">
+      <button class="btn btn-secondary" onclick="showScreen('mainMenu')">VOLVER</button>
+    </div>
   </div>
 
+  <!-- Menú Subir de Nivel -->
   <div id="levelUpMenu" class="screen hidden">
-    <h1 style="color: #00ffcc;">¡NIVEL ALCANZADO!</h1>
-    <p style="margin-bottom: 12px; color: #aaa;">Elige una mejora única:</p>
+    <h1 style="color: #00ffcc; text-shadow: 0 0 15px rgba(0,255,204,0.6);">¡NIVEL ALCANZADO!</h1>
+    <p style="margin-bottom: 15px; color: #ccc; font-size: 1rem;">Elige una mejora para tu personaje:</p>
     <div id="augmentsContainer" class="augments-container"></div>
   </div>
 
+  <!-- Menú Pausa -->
   <div id="pauseMenu" class="screen hidden">
     <h1>PAUSA</h1>
-    <div id="pausedAugmentsList" style="max-height: 55vh; overflow-y:auto; margin-bottom:15px; text-align:left; width:90%; max-width:550px; background:#111; padding:15px; border-radius:8px; border:1px solid #333;"></div>
-    <button class="btn" onclick="togglePause()">REANUDAR</button>
-    <button class="btn" style="background: #444;" onclick="quitToMain()">MENÚ PRINCIPAL</button>
+    <div id="pausedAugmentsList" class="pause-content"></div>
+    <div class="menu-actions">
+      <button class="btn" onclick="togglePause()">REANUDAR</button>
+      <button class="btn btn-secondary" onclick="quitToMain()">MENÚ PRINCIPAL</button>
+    </div>
   </div>
 
+  <!-- Menú Game Over -->
   <div id="gameOverMenu" class="screen hidden">
-    <h1 style="color: #ff3333; font-size: 3rem;">¡HAS MUERTO!</h1>
-    <p id="gameOverStats" style="margin-bottom: 20px; font-size: 1.2rem; color: #ccc; text-align: center;"></p>
-    <button class="btn" onclick="startGame()">JUGAR DE NUEVO</button>
-    <button class="btn" style="background: #444;" onclick="quitToMain()">MENÚ PRINCIPAL</button>
+    <h1 style="color: #ff3333; font-size: 2.8rem; text-shadow: 0 0 20px rgba(255, 50, 50, 0.8);">¡HAS MUERTO!</h1>
+    <p id="gameOverStats" style="margin-bottom: 25px; font-size: 1.2rem; color: #eee; text-align: center; line-height: 1.6;"></p>
+    <div class="menu-actions">
+      <button class="btn" onclick="startGame()">JUGAR DE NUEVO</button>
+      <button class="btn btn-secondary" onclick="quitToMain()">MENÚ PRINCIPAL</button>
+    </div>
   </div>
 
   <script src="script.js"></script>

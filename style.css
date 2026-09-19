@@ -1,97 +1,371 @@
 * {
-      box-sizing: border-box;
-      margin: 0; padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    body, html {
-      width: 100%; height: 100%;
-      overflow: hidden;
-      background-color: #050508;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    #gameCanvas {
-      display: block;
-      width: 100vw; height: 100vh;
-      background-color: #111a10;
-    }
-    .screen {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
-      background: rgba(10, 10, 15, 0.95);
-      color: #fff; z-index: 10;
-    }
-    .hidden { display: none !important; }
-    h1 {
-      font-size: 2.2rem; margin-bottom: 15px;
-      color: #ff3366; text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
-      text-align: center;
-    }
-    .btn {
-      padding: 12px 24px; margin: 8px;
-      font-size: 1.1rem; font-weight: bold; color: #fff;
-      background: linear-gradient(135deg, #ff3366, #ff6633);
-      border: none; border-radius: 8px; cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
-    }
-    .btn:active { transform: scale(0.96); }
-    
-    .selection-grid {
-      display: grid; 
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(210px, 1fr);
-      gap: 16px; 
-      max-width: 90vw; width: 90%;
-      max-height: 55vh; 
-      overflow-x: auto; 
-      overflow-y: hidden;
-      padding: 15px 10px;
-    }
-    .card {
-      background: #1a1a24; border: 2px solid #33334d;
-      border-radius: 8px; padding: 14px; text-align: center; cursor: pointer;
-      display: flex; flex-direction: column; justify-content: space-between;
-      min-width: 210px;
-    }
-    .card.selected { border-color: #00ffcc; background: #222233; }
-    .card.type-physical h3 { color: #E88538; font-size: 1.1rem; margin-bottom: 5px; }
-    .card.type-magical h3 { color: #a855f7; font-size: 1.1rem; margin-bottom: 5px; }
-    .card h3 { color: #00ffcc; font-size: 1.1rem; margin-bottom: 5px; }
-    .card p { font-size: 0.8rem; color: #aaa; margin-top: 4px; }
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
 
-    .codex-list {
-      width: 90%; max-width: 750px;
-      max-height: 60vh; overflow-y: auto;
-      background: #14141e; border-radius: 8px;
-      padding: 12px; display: flex; flex-direction: column; gap: 8px;
-    }
-    .codex-item {
-      background: #1c1c28; border-left: 5px solid #fff;
-      padding: 10px 14px; border-radius: 4px;
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.9rem;
-    }
-    .rarity-comun { border-color: #a0a0a0 !important; color: #a0a0a0; }
-    .rarity-raro { border-color: #ffd700 !important; color: #ffd700; }
-    .rarity-epico { border-color: #7ee8fa !important; color: #7ee8fa; }
-    .rarity-legendario { border-color: #d05ce3 !important; color: #d05ce3; }
-    .augments-container {
-      display: flex; flex-direction: column;
-      gap: 10px; width: 90%; max-width: 480px;
-    }
-    .augment-card {
-      background: #1e1e2d; border: 2px solid #3d3d5c;
-      padding: 12px; border-radius: 8px; cursor: pointer;
-      transition: transform 0.1s;
-    }
-    .augment-card:hover { transform: scale(1.02); }
-    #mobileControls {
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none; z-index: 5;
-    }
-    .touch-zone { position: absolute; pointer-events: auto; }
-    #joystickZone { left: 0; bottom: 0; width: 50%; height: 60%; }
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #050508;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  touch-action: none;
+}
+
+#gameCanvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  background-color: #F1E9E1;
+  cursor: crosshair;
+}
+
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(10, 10, 16, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  z-index: 10;
+  padding: 15px;
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+h1 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  margin-bottom: 12px;
+  color: #ff3366;
+  text-shadow: 0 0 12px rgba(255, 51, 102, 0.6);
+  letter-spacing: 1px;
+}
+
+.btn {
+  padding: 12px 26px;
+  margin: 6px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #ff3366, #ff6633);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-secondary {
+  background: #333344 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.btn-secondary:hover {
+  background: #44445a !important;
+}
+
+.menu-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* Grillas de Selección de Héroes y Armas */
+.selection-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(210px, 1fr);
+  gap: 16px;
+  max-width: 92vw;
+  width: 90%;
+  max-height: 55vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 15px 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #ff3366 #151520;
+}
+
+.selection-grid::-webkit-scrollbar {
+  height: 8px;
+}
+.selection-grid::-webkit-scrollbar-track {
+  background: #151520;
+  border-radius: 4px;
+}
+.selection-grid::-webkit-scrollbar-thumb {
+  background: #ff3366;
+  border-radius: 4px;
+}
+
+.card {
+  background: #161622;
+  border: 2px solid #2a2a3d;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 210px;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: #555577;
+}
+
+.card.selected {
+  border-color: #00ffcc;
+  background: #1c1c2e;
+  box-shadow: 0 0 16px rgba(0, 255, 204, 0.35);
+}
+
+.card h3 {
+  color: #00ffcc;
+  font-size: 1.15rem;
+  margin-bottom: 6px;
+}
+
+.card.type-physical h3 {
+  color: #E88538;
+}
+
+.card.type-magical h3 {
+  color: #c084fc;
+}
+
+.card p {
+  font-size: 0.85rem;
+  color: #bbb;
+  margin-top: 5px;
+  line-height: 1.35;
+}
+
+/* Códice de Aumentos */
+.codex-list {
+  width: 92%;
+  max-width: 780px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: #11111a;
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #2a2a3d;
+}
+
+.codex-list::-webkit-scrollbar {
+  width: 8px;
+}
+.codex-list::-webkit-scrollbar-track {
+  background: #11111a;
+}
+.codex-list::-webkit-scrollbar-thumb {
+  background: #ff3366;
+  border-radius: 4px;
+}
+
+.codex-item {
+  background: #181824;
+  border-left: 5px solid #fff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 600px) {
+  .codex-item {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* Colores de Rareza */
+.rarity-comun { border-color: #a0a0a0 !important; color: #d0d0d0; }
+.rarity-raro { border-color: #ffd700 !important; color: #ffd700; }
+.rarity-epico { border-color: #7ee8fa !important; color: #7ee8fa; }
+.rarity-legendario { border-color: #d05ce3 !important; color: #d05ce3; }
+.rarity-infinito { border-color: #00ffcc !important; color: #00ffcc; background: linear-gradient(90deg, #181824, #12282c) !important; }
+
+/* Contenedor de Selección de Nivel */
+.augments-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.augment-card {
+  background: #191928;
+  border: 2px solid #33334d;
+  padding: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.augment-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 14px rgba(0, 255, 204, 0.2);
+}
+
+.augment-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+/* Menú Pausa */
+.pause-content {
+  max-height: 55vh;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  text-align: left;
+  width: 90%;
+  max-width: 580px;
+  background: #11111a;
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid #2a2a3d;
+}
+
+/* Controles Táctiles / Móviles */
+#mobileControls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.touch-zone {
+  position: absolute;
+  pointer-events: auto;
+}
+
+#joystickZone {
+  left: 0;
+  bottom: 0;
+  width: 50%;
+  height: 65%;
+}
+
+#aimZone {
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  height: 65%;
+}
+
+.joystick-circle {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  display: none;
+  pointer-events: none;
+}
+
+.aim-circle {
+  border-color: rgba(255, 51, 102, 0.35);
+  background: rgba(255, 51, 102, 0.08);
+}
+
+.joystick-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 255, 204, 0.5);
+  border: 2px solid #00ffcc;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+}
+
+.aim-knob {
+  background: rgba(255, 51, 102, 0.5);
+  border-color: #ff3366;
+  box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+}
+
+.mobile-hud-btn {
+  position: absolute;
+  pointer-events: auto;
+  background: rgba(20, 20, 30, 0.85);
+  border: 1px solid #444460;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  cursor: pointer;
+  z-index: 9;
+}
+
+#mobilePauseBtn {
+  top: 12px;
+  right: 12px;
+  font-size: 1.2rem;
+  padding: 6px 12px;
+}
+
+#autoAimToggleBtn {
+  top: 12px;
+  right: 65px;
+  font-size: 0.85rem;
+  background: rgba(0, 255, 204, 0.2);
+  border-color: #00ffcc;
+  color: #00ffcc;
+}
+
+#autoAimToggleBtn.active {
+  background: #00ffcc;
+  color: #050508;
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* En PC ocultamos elementos innecesarios */
+  .joystick-circle {
+    display: none !important;
+  }
+}
